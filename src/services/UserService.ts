@@ -1,4 +1,5 @@
 import { UserEntity } from "../entities/User";
+import { User } from "../interfaces/User";
 import { userRepository, UserRepository } from "../repositories/UserRepository";
 
 
@@ -12,6 +13,18 @@ export class UserService {
     async findByEmail(email: string): Promise<UserEntity | null> {
         return await this.userRepository.findByEmail(email)
     }
+
+    async listAll() {
+        return await userRepository.list()
+    }
+
+    async findById(id: string): Promise<UserEntity | null> {
+        return await this.userRepository.findById(id)
+    }
+    async update(id: string, data: Partial<UserEntity>): Promise<void> {
+        return await this.userRepository.update(id, data)
+    }
+
 }
 
 

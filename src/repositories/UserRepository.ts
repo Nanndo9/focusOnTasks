@@ -13,6 +13,14 @@ export class UserRepository extends BaseRepository<UserEntity> {
     public async findByEmail(email: string): Promise<UserEntity | null> {
         return await this.repository.findOneBy({ email })
     }
+
+    public async findById(id: string): Promise<UserEntity | null> {
+        return await this.repository.findOneBy({ id })
+    }
+
+    public async update(id: string, updateData: Partial<UserEntity>): Promise<void> {
+        await this.repository.update(id, updateData)
+    }
 }
 
 

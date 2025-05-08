@@ -10,10 +10,10 @@ import {
 } from "typeorm";
 import { Task } from "./Task";
 
-@Entity()
+@Entity("user")
 export class UserEntity {
     @PrimaryGeneratedColumn("uuid")
-    id: number;
+    id: string;
 
     @Column({ unique: true })
     email: string;
