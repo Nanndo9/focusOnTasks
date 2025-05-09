@@ -8,7 +8,7 @@ import { authService, AuthService } from "../services/AuthService";
 import { error } from "console";
 import { authMiddleware } from "../middlewares/authMiddleware";
 import { userRepository, UserRepository } from "../repositories/UserRepository";
-import { UpdateDateColumn } from "typeorm";
+import { emailService } from "../services/EmailService";
 
 export class UserRoute {
     constructor(private readonly userService: UserService, authService: AuthService, userRepository: UserRepository) { }
@@ -47,10 +47,17 @@ export class UserRoute {
                     user.createdAt = userDTO.createdAt
                     user.updatedAt = userDTO.updatedAt
 
-                    await this.userService.createUser(user);
+
+                    const createdUser = await this.userService.createUser(user);
+                    const welcomeEmail = await emailService.readEmailTemplate();
+                    await emailService.sendEmail(
+                        user.email,
+                        'Bem-vindo!',
+                        welcomeEmail
+                    );
 
                     res.status(HttpStatus.CREATED).json({
-                        user
+                        user: createdUser
                     })
 
                 } catch (error) {
@@ -90,8 +97,9 @@ export class UserRoute {
 
                         const updateUser = await this.userService.update(id, userData)
 
-                        res.json({ message: `Alterado com sucesso!` ,
-                            user:updateUser
+                        res.json({
+                            message: `Alterado com sucesso!`,
+                            user: updateUser
                         })
 
                     } catch (error) {

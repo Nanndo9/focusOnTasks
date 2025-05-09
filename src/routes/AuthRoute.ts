@@ -20,6 +20,33 @@ export class AuthRoute {
                 next(error)
             }
         })
+
+        router.post("/forgot-password", async (req: Request, res: Response, next: NextFunction) => {
+            try {
+                const { email } = req.body
+                await this.authService.requestPasswordReset(email);
+                res.status(HttpStatus.OK).json({
+                    message: "Email de redefinição de senha enviado"
+                })
+            } catch (error) {
+                next(error)
+            }
+        })
+
+
+        router.patch("/reset-password/:token", async (req: Request, res: Response, next: NextFunction) => {
+            try {
+                const token = req.params.token; 
+                const { newPassword } = req.body;
+
+                await this.authService.resetPassword(token, newPassword);
+                res.status(HttpStatus.OK).json({
+                    message: "Senha redefinida com sucesso"
+                });
+            } catch (error) {
+                next(error);
+            }
+        })
         return router
     }
 }
