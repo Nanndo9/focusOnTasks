@@ -25,6 +25,13 @@ export class UserService {
         return await this.userRepository.update(id, data)
     }
 
+    async delete(id: string): Promise<void> {
+        return await this.userRepository.delete(id)
+    }
+
+    async activateUser(id: string): Promise<void> {
+        return await this.userRepository.restore(id)
+    }
 }
 
 
