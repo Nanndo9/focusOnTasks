@@ -21,6 +21,13 @@ export class UserRepository extends BaseRepository<UserEntity> {
     public async update(id: string, updateData: Partial<UserEntity>): Promise<void> {
         await this.repository.update(id, updateData)
     }
+
+    public async delete(id: string): Promise<void> {
+        await this.repository.softDelete(id)
+    }
+
+    
+
 }
 
 
