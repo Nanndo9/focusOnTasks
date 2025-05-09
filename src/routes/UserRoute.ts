@@ -106,7 +106,49 @@ export class UserRoute {
 
                     }
                 }
+            ),
+            router.delete("/:id",
+                authMiddleware,
+                async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+                    try {
+                        const id = req.params.id;
+
+                        const user = await this.userService.findById(id)
+
+                        if (!user) {
+                            res.status(HttpStatus.NOT_FOUND).json({
+                                message: "User not found"
+                            })
+                        }
+
+                        await this.userService.delete(id)
+                        res.status(HttpStatus.ACCEPTED).json({
+                            message: "Successful deleted user!"
+                        })
+
+                    } catch (error) {
+                        next(error)
+                    }
+                }
+            ),
+
+            router.patch("/restore/:id",
+                authMiddleware,
+                async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+                    try {
+                        const userId = req.params.id
+
+                        await this.userService.activateUser(userId)
+
+                        res.status(HttpStatus.OK).json({
+                            message: `User with ID ${userId} successfully restored!`
+                        })
+                    } catch {
+                        next(error)
+                    }
+                }
             )
+
         )
         return router;
     }
