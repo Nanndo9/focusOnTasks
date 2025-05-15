@@ -32,6 +32,10 @@ export class UserService {
     async activateUser(id: string): Promise<void> {
         return await this.userRepository.restore(id)
     }
+
+    async lisTaskByUser(id: string): Promise<UserEntity | null> {
+        return await this.userRepository.findUserByTask(id)
+    }
 }
 
 

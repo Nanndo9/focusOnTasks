@@ -7,4 +7,5 @@ export interface ITaskRepository {
     update(id: string, taskData: Partial<Task>): Promise<void>;
     disableTask(id: string): Promise<void>;
     restore(id: string): Promise<void>;
+    findDeletedTaskById(id:string):Promise<Task|null>
 }

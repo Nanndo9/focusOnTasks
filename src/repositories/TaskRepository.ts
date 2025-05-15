@@ -10,11 +10,26 @@ export class TaskRepository extends BaseRepository<Task> implements ITaskReposit
     }
 
     public async findById(id: string): Promise<Task | null> {
-        return await this.repository.findOneBy({ id })
+        return await this.repository.findOne({
+            where: { id },
+            relations: {
+                user: true
+            }
+        })
     }
 
     public async findByUserId(userId: string): Promise<Task[]> {
         return await this.repository.findBy({ user: { id: userId } });
+    }
+
+    public async findDeletedTaskById(id: string): Promise<Task | null> {
+        return await this.repository.findOne({
+            where: { id },
+            relations: {
+                user: true
+            },
+            withDeleted: true
+        });
     }
 
     public async disableTask(id: string): Promise<void> {
