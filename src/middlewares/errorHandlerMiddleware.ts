@@ -1,9 +1,17 @@
-import { type NextFunction,type Request,type Response } from "express";
+import { type NextFunction, type Request, type Response } from "express";
 import { HttpStatus } from "../enum/httpStatus";
 
+export const errorHandler = (
+    err: any,
+    _: Request,
+    res: Response,
+    next: NextFunction
+): void => {
 
-export const errorHandler = (err: Error, req: Request, res: Response, next: NextFunction): void => {
-    console.error(err.stack);
-    res.status(HttpStatus.INTERNAL_SERVER_ERROR).send('OCORREU UM ERRO INTERNO DE SERVIDOR');
-    next();
+    const status = err.statusCode || HttpStatus.INTERNAL_SERVER_ERROR;
+    const message = status === HttpStatus.INTERNAL_SERVER_ERROR
+        ? 'OCORREU UM ERRO INTERNO DE SERVIDOR'
+        : err.message;
+
+    res.status(status).json({ erro: message });
 }
