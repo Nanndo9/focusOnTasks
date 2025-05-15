@@ -4,14 +4,14 @@ import { HttpStatus } from "../enum/httpStatus";
 import bcrypt from "bcrypt"
 import { UserEntity } from "../entities/User";
 import { UserDTO } from "../dto/UserDTO";
-import { authService, AuthService } from "../services/AuthService";
+import { authService } from "../services/AuthService";
 import { error } from "console";
 import { authMiddleware } from "../middlewares/authMiddleware";
-import { userRepository, UserRepository } from "../repositories/UserRepository";
+import { userRepository } from "../repositories/UserRepository";
 import { emailService } from "../services/EmailService";
 
 export class UserRoute {
-    constructor(private readonly userService: UserService, authService: AuthService, userRepository: UserRepository) { }
+    constructor(private readonly userService: UserService) { }
 
     public getRoute(): Router {
         const router = Router()
@@ -150,8 +150,30 @@ export class UserRoute {
             )
 
         )
+
+        router.get("/list/task/:id",
+            authMiddleware,
+            async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+                try {
+                    const id = req.params.id
+                    const listUserswithTasks = await this.userService.lisTaskByUser(id)
+
+                    if (listUserswithTasks === null || listUserswithTasks === undefined) {
+                        res.status(HttpStatus.NOT_FOUND).json({
+                            message: "Usuário não encontrado"
+                        });
+                    }
+                    res.json({
+                        tasks: listUserswithTasks?.tasks
+                    })
+                } catch (error) {
+                    next(error)
+                }
+
+            }
+        )
         return router;
     }
 }
 
-export const userRoute = new UserRoute(userService, authService, userRepository)
+export const userRoute = new UserRoute(userService)
