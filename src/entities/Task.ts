@@ -5,6 +5,7 @@ import {
     ManyToOne,
     CreateDateColumn,
     UpdateDateColumn,
+    DeleteDateColumn,
 } from "typeorm";
 import { UserEntity } from "./User";
 
@@ -30,4 +31,7 @@ export class Task {
 
     @UpdateDateColumn({ name: "updated_at", type: "timestamp" })
     updated_at: Date;
+
+    @DeleteDateColumn({ name: "deleted_at", type: "timestamp" })
+    deletedAt: Date;
 }

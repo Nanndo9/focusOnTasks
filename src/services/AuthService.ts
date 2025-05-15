@@ -5,6 +5,8 @@ import { User } from "../interfaces/User";
 import { IPasswordResetTokenService } from "../interfaces/IPasswordReset";
 import { passwordResetTokenService } from "./PasswordResetTokenService";
 import { emailPasswordResetNotifier, EmailPasswordResetNotifier } from "../adapter/EmailPasswordResetNotifier";
+import { AppError } from '../errors/AppError';
+import { HttpStatus } from '../enum/httpStatus';
 
 export class AuthService {
     public constructor(
@@ -17,13 +19,13 @@ export class AuthService {
         const userExists = await this.userService.findByEmail(email);
 
         if (!userExists) {
-            throw new Error("User not found")
+            throw new AppError('Email ou senha inválidos', HttpStatus.UNAUTHORIZED);
         }
 
-        const isPasswordValid = await bcrypt.compare(password, userExists.password)
+        const isPasswordValid = await bcrypt.compare(password, userExists.password);
 
         if (!isPasswordValid) {
-            throw new Error("Invalid password");
+            throw new AppError('Email ou senha inválidos', HttpStatus.UNAUTHORIZED);
         }
 
         const accessToken = this.generateAccessToken(userExists)

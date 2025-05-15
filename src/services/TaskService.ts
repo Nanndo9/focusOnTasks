@@ -28,6 +28,10 @@ export class TaskService {
     async restore(id: string): Promise<void> {
         return await this.taskRepository.restore(id)
     }
+
+    async findDeletedTaskById(id: string): Promise<Task | null> {
+        return await this.taskRepository.findDeletedTaskById(id)
+    }
 }
 
 export const taskService = new TaskService(taskRepository)

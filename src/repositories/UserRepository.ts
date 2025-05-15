@@ -26,7 +26,18 @@ export class UserRepository extends BaseRepository<UserEntity> {
         await this.repository.softDelete(id)
     }
 
-    
+    public async findUserByTask(id: string): Promise<UserEntity | null> {
+        return await this.repository.findOne({
+            where:
+                { id }
+            ,
+            relations: {
+                tasks: true
+            }
+        })
+    }
+
+
 
 }
 
